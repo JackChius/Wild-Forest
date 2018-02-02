@@ -58,7 +58,7 @@
     </center>
     <div v-on:click="goTop" v-show="ok" class="go_top"></div> <br><br><br><br>
     <footer class="copy">
-    © 2017 Artistic index Page. All Rights Reserved | Design by QiquLand
+    © 2018 Artistic index Page. All Rights Reserved | Design by QiquLand
     </footer>
   </div>
 </template>
