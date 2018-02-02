@@ -1,0 +1,108 @@
+.article {
+	width: 640px;float: left;
+	margin-left: 100px;
+	.title {
+		font-size: 24px;line-height: 1.5;color: $blue;
+	}
+	.date {
+		color: #999;line-height: 4;
+	}
+	.article_content {
+		margin-top: 10px;line-height: 2;color: $c22;
+		img {
+			display: block;max-width: 600px;max-height: 600px; border-radius: 10px;margin: 10px auto;
+			box-shadow:0 0 0 2px $cff, 3px 3px 5px rgba(#000,.5);
+		}
+		p {
+			padding: 5px 0;text-indent: 2em;
+		}
+		a {
+			color: $green;
+			&:hover {color: $cf60;}
+		}
+		table {
+			width: 100%;text-align: center;
+			&,th,td {border: 1px solid lighten($blue,50%);}
+			th {background: $blue;color: $cff;}
+			tr:nth-child(2n){
+				background: rgba($blue,.05);
+			}
+		}
+		h1,h2,h3,h4,h5,h6 {font-weight: bold;color: $blue;}
+		h4,h5,h6 {font-size: 13px;}
+		h3 {font-size: 14px;}
+		h2 {font-size: 16px;}
+		h1 {font-size: 18px;}
+		ol {
+			counter-reset:item;margin-top: 5px;
+			li {
+				line-height: 2;text-indent: 2em;
+				&:before {
+					content:counter(item)". "; 
+					counter-increment:item;
+				}
+			}
+		}
+	}
+	.replies_title {
+		margin: 20px 0;color: $cff;
+		line-height: 2;text-indent: 20px;border-radius: 1px;
+		@include jb(darken($blue,16%), lighten($cff,15%));
+		// box-shadow: 0 0 0 1px $blue inset,0 0 0 2px rgba($cff,0.5) inset,0 0 5px rgba($blue,.5);
+		text-shadow:1px 1px 0 rgba($c00,.5);
+	}
+
+}
+
+.bar {
+	width:330px;
+	float: right;
+	margin-right: 50px;
+	li {
+		margin:10px auto;
+	}
+	.aside-tab {
+		float: left;
+		width: 100%;
+		margin:14px 0 4px 0;
+		padding-top: 4px;
+		border-top: 1px solid rgba(96,96,96,0.3);
+		ul {
+			margin: 10px auto;
+			li {
+				margin-top: 7px;
+			}
+		}
+		h3 {
+			font-size: 13px;color: $c00;margin-left: 10px;
+		}
+	}
+}
+
+//响应式移动端配置
+@media screen and (max-width: 480px) {
+	.article {
+		width: 97%;
+		margin-left: 3px;
+	 .replies_title {
+		 max-width: 355px;
+	 }
+	 .article_content img {
+		 max-width: 90%;
+		 margin-left: 1px;
+	 }
+	}
+	aside.bar {
+		max-width: 330px;
+		margin-right: 20px;
+		>h3:nth-of-type(1) {
+			display: none;
+		}
+		>h3:nth-of-type(2) {
+			display: none;
+		}
+		ol{
+             display: none;
+		}
+	}
+}
