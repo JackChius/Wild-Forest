@@ -9,10 +9,13 @@ Vue.use(VueRouter)
 import ElementUI from 'element-ui'
 // 单独引入第三方样式文件
 import 'element-ui/lib/theme-chalk/index.css'
+// 引入Vue-Socket.io库
+import VueSocketio from 'vue-socket.io'
 // 引入根组件文件
 import App from './App.vue'
 // 使用第三方库
 Vue.use(ElementUI)
+Vue.use(VueSocketio, 'http://free2me.top:3000')
 // 引用路由配置文件
 import routes from './config/routes'
 
@@ -23,7 +26,7 @@ Vue.prototype.$api = api
 // 使用配置文件规则
 
 const router = new VueRouter({
-  mode: 'hash',
+  mode: 'history',
   // base: __dirname,
   routes
 })

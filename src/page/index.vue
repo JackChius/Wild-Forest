@@ -14,7 +14,7 @@
                 <router-link :to="{ name: 'indexcate', params: { itag: 'car', p: 1}}">汽车</router-link>
               </li>           
               <li class="tab">
-                <router-link :to="{ name: 'indexcate', params: { itag: 'finance', p: 1 }}">金融理财</router-link>
+                <router-link :to="{ name: 'indexcate', params: { itag: 'book', p: 1 }}">读书</router-link>
               </li>
               <li class="tab">
                 <router-link :to="{ name: 'indexcate', params: { itag: 'food', p: 1 }}"> 美食 </router-link>
@@ -23,7 +23,7 @@
                 <router-link :to="{ name: 'indexcate', params: { itag: 'history', p: 1 }}"> 历史读书 </router-link>
               </li>
               <li class="tab">
-                <router-link :to="{ name: 'indexcate', params: { itag: 'job', p: 1 }}"> 工作 </router-link>
+                <router-link :to="{ name: 'indexcate', params: { itag: 'video', p: 1 }}"> 影视 </router-link>
               </li>
               <li class="tab">
                 <router-link :to="{ name: 'indexcate',meta:{wqe:1}, params: { itag: 'sport', p: 1 }}"> 运动健身 </router-link>
@@ -43,16 +43,17 @@
           <section class="main">
 
             <clip-loader :loading="loading" :color="color" size="45px"></clip-loader>
-
+          
             <!-- 循环接收服务器数据开始 -->
             <ul class="list">
               <li v-for="(item,index) in lists">
+                <h1>{{lists.msg?lists.msg:''}}</h1>
                 <i class="user_ico">              
                   <img v-bind:src="item.logo">              
                 </i>
                 <h3>
                    <router-link  :to="{ name: 'content',params: { 
-                     id: item._id,
+                     id: item._id ? item._id : 1,
                      tag: item.tag, 
                      utitle: item.title,
                      utime:item.update_time,
@@ -85,10 +86,40 @@
             :currentPage.sync = curpg
             @current-change="pgChange"
             >
-          </el-pagination>
-
+          </el-pagination><br>
+            <!-- 聊天室部分 -->
+            <div id="loginbox" class="login-wrap" v-show="clogshow">
+                <h2 class="title">聊一聊</h2><br>
+                <div class="login-wrap">
+                    <div class="user-ipt">
+                        <h3  class="user-name">用户名：</h3><br>
+                        <el-input id="chatname" v-model="chatname"  class="name-ipt" type="text" />
+                    </div><br>
+                    <el-button type="info" round id="loginbutton" @click="setUsername" class="login-button">现在登录,聊一聊</el-button>
+                </div>
+            </div>
+            <div id="chatbox" class="chat-wrap" v-show="cboxshow">
+                <el-alert
+                  title="欢迎 "
+                  :closable=false
+                  type="success"> <strong> <span style="color:gray;font-size:16px;">{{ chatname}}</span>  来到聊一聊 当前在线人数: <span style="color:darkgreen;font-size:16px;">{{curChater}}</span></strong> 
+                </el-alert>
+                <el-card id="ctcontent"  class="chat-content">
+                   <ul>
+                     <li v-for="item in chatList">
+                       <strong>
+                         <p :class="item.look"> <span id="otherpo">{{item.username}}</span> <el-tag type="success" id="curmsg">  {{item.msg}}  </el-tag>  <span id="selfpo">   {{item.username}}  </span> </p>
+                       </strong>
+                     </li>
+                   </ul>
+                </el-card>
+               <el-card>
+                    <el-input v-model="chatcon" @keydown.native="chatmit($event)" rows="3" cols="50" id="chatmessage" class="message-ipt" type="textarea" placeholder="请输入要发送的内容 Enter发送"></el-input>
+               </el-card>
+            </div>
+        <!-- 聊天室部分 -->
           </section>
-
+      
         </el-col>
         <!--侧边栏部分。IDE中通常折叠-->
         <el-col :md="4" :lg="3">
@@ -208,7 +239,7 @@
                 <li class="tagTitle" v-for="(tag,index) in tags" v-if="index < 28">
                   <el-tag >
                     <router-link :to="{ name: 'category', query: {tag: tag.tag}}">
-                     <strong>{{tag.tag}}</strong>  </router-link>
+                     <strong>{{tag[1]}}</strong>  </router-link>
                     <div class="border"></div>
                   </el-tag>
 
@@ -228,8 +259,8 @@
 </template>
 <script>
 import { goodTime } from "../config/method"; //引入时间过滤函数等方法
-import clipLoader from 'vue-spinner/src/RiseLoader.vue'
-
+import clipLoader from "vue-spinner/src/RiseLoader.vue";
+let PassRes = true; // 限制访问预留变量，如果有的话
 export default {
   data() {
     return {
@@ -238,14 +269,20 @@ export default {
       ok: false,
       tags: [],
       searchBarFixed: false, // 顶栏fixed样式开关
-      hshow: true,           // 顶栏是否显示
+      hshow: true, // 顶栏是否显示
       // changeCate: false,     // 点击进入分类页开关 更新视图watch的值
-      cate:'' ,
-      scrollView:""  ,             // 当前分类，由对应分类标签页（el-menu-item）的子元素i的classList[1]获得
-      curpg:1 ,
-      pgIsLittle:false,
+      cate: "",
+      scrollView: "", // 当前分类，由对应分类标签页（el-menu-item）的子元素i的classList[1]获得
+      curpg: 1,
+      pgIsLittle: false,
       loading: false,
-      color: '#3AB982'
+      color: "#3AB982",
+      chatname: "",
+      cboxshow: false,
+      clogshow: true,
+      chatcon: "",
+      chatList: [],
+      curChater: ''
     };
   },
   props: {
@@ -254,23 +291,23 @@ export default {
       default: 1
     }
   },
-   components: {
-    'clip-loader':clipLoader
+  components: {
+    "clip-loader": clipLoader
   },
   created() {
-    localStorage.removeItem('utitle'),
-    this.get_data(),
-    this.getTag(),
-    this.checkMobile()
+    localStorage.removeItem("utitle"),
+      this.get_data(),
+      this.getTag(),
+      this.checkMobile();
     // this.emitEvent()
     // window.addEventListener('scroll', this.showTop)
   },
   mounted() {
-    window.addEventListener("scroll", this.handleScroll) // 在mounted钩子中给window添加一个滚动滚动监听事件
+    window.addEventListener("scroll", this.handleScroll); // 在mounted钩子中给window添加一个滚动滚动监听事件
     // window.addEventListener("mousewheel", this.handleScroll); // 监听鼠标滚动（方向？）
   },
   destroyed() {
-    window.removeEventListener("scroll", this.handleScroll)
+    window.removeEventListener("scroll", this.handleScroll);
     // window.removeEventListener("mousewheel", this.handleScroll); //离开页面时取消监听，避免内存溢出
   },
   watch: {
@@ -278,25 +315,73 @@ export default {
       //  console.log('new: %s, old: %s', val, oldVal),
       this.get_data();
     },
-    '$route' (to, from) {                          // 监听路由变化 重新获取数据
-    //  console.log(this.$route.path)
-     this.curpg = 1
-     
-    //  this.$refs.pageButton.currentPage=1
-     this.get_data()
-     
-    
-   }
+    $route(to, from) {
+      // 监听路由变化 重新获取数据
+      //  console.log(this.$route.path)
+      this.curpg = 1;
+      //  this.$refs.pageButton.currentPage=1
+      this.get_data();
+    },
+    chatList() {
+      this.$nextTick(() => {
+        document.getElementById(
+          "ctcontent"
+        ).scrollTop = document.getElementById("ctcontent").scrollHeight;
+      });
+    }
   },
+  // updated: function(){
+  //    document.getElementById('ctcontent').scrollTop = document.getElementById('ctcontent').scrollHeight;
+  // },                 // 和watch chatList都可以监听并自动滚动聊天窗口到底部
 
   filters: {
     goodTime(val) {
-      return goodTime(val*1000);                  // 当后端时间戳位数不一致(10)，需要转换为13位js时间戳
+      return goodTime(val * 1000); // 当后端时间戳位数不一致(10)，需要转换为13位js时间戳
     },
     substr: function(value) {
       return value.substring(0, 6) + "..."; //截取字符串
     }
   },
+
+  sockets: {
+    connect: function() {
+      console.log("socket connected");
+    },
+    loginResult: function(data) {
+      if (data.code === 0) {
+        console.log('当前在线人数'+data.curChater);
+        this.curChater = data.curChater;
+        let welData = {
+          username: this.chatname,
+          message: '欢迎欢迎[此条消息由系统自动发送233]'
+        };
+        this.showMessage(welData);
+        this.showChatRoom();
+        console.log("初次登录多多关照");
+      } else if (data.code === 1) {
+      this.$notify({
+          title: "功能提示",
+          message:  this.chatname + " 你已登录过,后续功能开发完成前,你需要换个马甲" ,
+          position: "top-right"
+        });
+      } else {
+        alert("登录失败！");
+      }
+    },
+    receiveMessage: function(data) {
+      this.showMessage(data);
+      console.log("123");
+    },
+    userDiscon: function(data) {
+     this.curChater = data.curChater;
+     this.$notify({
+          title: "最新动态",
+          message:  data.msg ,
+          position: "bottom-right"
+        });
+    }
+  },
+
   methods: {
     // setT,
     // handleIconClick: function(ev, params) {             // 搜索功能
@@ -314,23 +399,41 @@ export default {
       if (!params) params = {};
       // 使用全局绑定的$api方法来获取数据
       // console.log(this.$route.params.tag)
-      v.$api.get("get", { 
-        list: this.$route.params.itag?this.$route.params.itag:'hot', 
-        p: this.curpg   }, function(r) {
-        // console.log(r.data.data);
-        if(r.data.status===0){
-         v.$router.replace({path: '/404'})
-        }else{
-               v.lists = r.data.data.sort((a, b) => b._id - a._id); // 排序(升序)/追加数据（覆盖加载）备用无限加载: v.lists.concat(r.data.sites)
-               console.log(v.$route)
-               v.loading = false
-        } 
-      });
+      v.$api.get(
+        "get",
+        {
+          list: this.$route.params.itag ? this.$route.params.itag : "hot",
+          p: this.curpg
+        },
+        function(r) {
+          // console.log(r.data.data);
+          if (r.data.status === 0) {
+            v.lists = r.data ? r.data : "";
+            v.$router.push({ path: "/" });
+          } else {
+            let testAr = [
+              { title: "此类目下暂无内容" },
+              { title: "请等一下", tag: "......\n" }
+            ];
+            for (let i = 3; i < 15; i++) {
+              testAr.push({
+                title: " ...",
+                tag: " ...",
+                update_time: '160030078'
+              });
+            }
+            v.lists = r.data.data.length != 0 ? r.data.data : testAr;
+            //  r.data.data.sort((a, b) => b._id - a._id);  // 可按json里的_id属性排序(升序)/追加数据（覆盖加载）备用无限加载: v.lists.concat(r.data.sites)
+            console.log(v.$route);
+            v.loading = false;
+          }
+        }
+      );
     },
     getTag: function(params) {
       var v = this;
       if (!params) params = {};
-      
+
       v.$api.get("category", { tag: "all" }, function(r) {
         v.tags = r.data.data; //追加数据（覆盖加载）
       });
@@ -340,12 +443,12 @@ export default {
         window.pageYOffset ||
         document.documentElement.scrollTop ||
         document.body.scrollTop;
-      let clientWidth = document.documentElement.clientWidth ;
-        if(scrollTop > 350 && clientWidth >960) {
-          this.scrollView = "el-menu affix"
-        }else{
-          this.scrollView = "el-menu"
-        }
+      let clientWidth = document.documentElement.clientWidth;
+      if (scrollTop > 350 && clientWidth > 960) {
+        this.scrollView = "el-menu affix";
+      } else {
+        this.scrollView = "el-menu";
+      }
       // var offsetTop = document.querySelector("#header").offsetTop;
       // if (e.deltaY < 0) {
       //   if (scrollTop - offsetTop > 100) {
@@ -363,30 +466,118 @@ export default {
       //   this.hshow = false;
       // }
     },
-    pgChange: function(cur){
-      this.curpg = cur
+    pgChange: function(cur) {
+      this.curpg = cur;
     },
     checkMobile: function() {
-    let ua = navigator.userAgent.toLowerCase() || window.navigator.userAgent.toLowerCase();
+      let ua =
+        navigator.userAgent.toLowerCase() ||
+        window.navigator.userAgent.toLowerCase();
       //判断user-agent
-     let isWX = /MicroMessenger/i.test(ua)  //微信端
-     let isIOS = /(iPhone|iPad|iPod|iOS)/i.test(ua) //苹果家族
-     let isAndroid = /(android|nexus)/i.test(ua)  //安卓家族
-     if(isWX||isIOS||isAndroid){
-       this.pgIsLittle = true
-     }
+      let isWX = /MicroMessenger/i.test(ua); //微信端
+      let isIOS = /(iPhone|iPad|iPod|iOS)/i.test(ua); //苹果家族
+      let isAndroid = /(android|nexus)/i.test(ua); //安卓家族
+      if (isWX || isIOS || isAndroid) {
+        this.pgIsLittle = true;
+      }
+    },
+    setUsername: function() {
+      let _username = this.chatname; //得到输入框中用户输入的用户名
+      console.log(_username);
+      //判断用户名是否存在
+      if (_username) {
+        this.$socket.emit("login", { username: _username }); //如果用户名存在，就代表可以登录了，我们就触发登录事件，就相当于告诉服务器我们要登录了
+        this.$notify({
+          title: "一条提示",
+          message: "登录成功 欢迎 " + _username,
+          position: "top-right"
+        });
+      } else {
+        this.$notify({
+          title: "一条提示",
+          message: "请输入你的大名",
+          position: "bottom-right"
+        });
+      }
+    },
+    showChatRoom: function() {
+      this.clogshow = false;
+      this.cboxshow = true;
+    },
+    sendMsg: function() {
+      let _message = this.chatcon; //得到要发送的的对话信息
+      if (_message.length > 1) {
+        this.$socket.emit("sendMessage", {
+          username: this.chatname,
+          message: _message
+        });
+      } else {
+        this.$notify({
+          title: "一条提示",
+          message: "请输入发送消息...",
+          position: "bottom-right"
+        });
+      }
+    },
+    chatmit: function(ev) {
+      if (ev.keyCode === 13) {
+        this.sendMsg();
+        this.chatcon = "";
+      }
+    },
+    showMessage: function(data) {
+      //先判断这个消息是不是自己发出的，然后再以不同的样式显示
+      if (data.username === this.chatname) {
+        this.chatList.push({
+          username: data.username,
+          msg: data.message,
+          look: "selfca"
+        });
+      } else {
+        this.chatList.push({
+          username: data.username,
+          msg: data.message,
+          look: "otherca"
+        });
+
+        // $("#content").append(`<p class='other-message'><span class='name'>${data.username}: </span><span class='msg'>${data.message}</span></p>`);
+      }
     }
-    // getCategory: function(params) {
-    //   // console.log(e.currentTarget)
-    //   let v = this;
-    //   if (!params) params = {};
-    //   // 使用全局绑定的$api方法来获取数据
-    //   v.$api.get("get", { list: this.$route.params.tag?this.$route.params.tag:'hot', p: this.page }, function(r) {
-    //     console.log(r.data.data);
-    //     v.lists = r.data.data.sort((a, b) => b._id - a._id); // 排序(升序)/追加数据（覆盖加载）备用无限加载: v.lists.concat(r.data.sites)
-    //   });
-    // }
   }
 };
 </script>
+
+<style scoped>
+.selfca {
+  color: goldenrod;
+  text-align: right;
+}
+.selfca span#curmsg {
+  font-size: 18px;
+  color: darkgreen;
+}
+.selfca span#otherpo {
+  display: none;
+}
+.otherca {
+  color: green;
+  text-align-last: start;
+}
+.otherca span#otherpo {
+  color: skyblue;
+}
+.otherca span#selfpo {
+  display: none;
+}
+.otherca span#curmsg {
+  font-size: 18px;
+  color: darkolivegreen;
+  background-color: lightcyan;
+}
+#chatbox #ctcontent {
+  height: 390px;
+  overflow: auto;
+}
+</style>
+
 

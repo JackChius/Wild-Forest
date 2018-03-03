@@ -258,8 +258,8 @@ export default {
      
       
       let v = this
-      setTimeout(function(){  v.loading = true },1000)
-      setTimeout(function(){  v.loading = false },1000)
+      setTimeout(function(){  v.loading = true },800)
+      setTimeout(function(){  v.loading = false },800)
       if (!params) params = {}
       // 使用全局绑定的$api方法来获取数据
       v.$api.get('stm', { tag: this.$route.params.tag, id: this.$route.params.id }, function(r) {

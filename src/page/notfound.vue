@@ -35,7 +35,13 @@ export default {
   },
   methods: {
     testmeta: function() {
+      let v = this;
       console.log(this.$route);
+      // v.$router.replace({ path: '/' })
+      setTimeout(function(){ 
+          v.$router.replace({ path: '/' })
+       },2000)
+     
     }
   }
 };
@@ -43,5 +49,6 @@ export default {
 <style>
 #notfind {
   background-color: rgba(66, 66, 66, 0.2);
+  margin-top: -5px;
 }
 </style>
