@@ -29,9 +29,9 @@
                 <router-link :to="{ name: 'indexcate',meta:{wqe:1}, params: { itag: 'sport', p: 1 }}"> 运动健身 </router-link>
               </li>
               <li class="tab">
-                <router-link :to="{ name: 'indexcate', params: { itag: 'technology', p: 1 },meta:{wqe:1}}"> 科技 </router-link>
+                <a @click="get_weland" href="#"> 科技 </a>
               </li>
-              <!-- <li class="tab">1111</li> -->
+        
               
             </ul>
           
@@ -47,18 +47,18 @@
             <!-- 循环接收服务器数据开始 -->
             <ul class="list">
               <li v-for="(item,index) in lists">
-                <h1>{{lists.msg?lists.msg:''}}</h1>
+                <!-- <h1>{{we_data?we_data[1].title:''}}</h1> -->
                 <i class="user_ico">              
                   <img v-bind:src="item.logo">              
                 </i>
                 <h3>
                    <router-link  :to="{ name: 'content',params: { 
                      id: item._id ? item._id : 1,
-                     tag: item.tag, 
-                     utitle: item.title,
-                     utime:item.update_time,
-                     uname:item.gzh_name,
-                     utag:item.tag,
+                     tag: item.tag , 
+                     utitle: item.title ,
+                     utime: item.update_time ,
+                     uname: item.gzh_name ,
+                     utag: item.tag ,
                      uchatid:item.wechat_id }} ">{{ item.title }}</router-link>
                 </h3>
               
@@ -87,37 +87,6 @@
             @current-change="pgChange"
             >
           </el-pagination><br>
-            <!-- 聊天室部分 -->
-            <div id="loginbox" class="login-wrap" v-show="clogshow">
-                <h2 class="title">聊一聊</h2><br>
-                <div class="login-wrap">
-                    <div class="user-ipt">
-                        <h3  class="user-name">用户名：</h3><br>
-                        <el-input id="chatname" v-model="chatname"  class="name-ipt" type="text" />
-                    </div><br>
-                    <el-button type="info" round id="loginbutton" @click="setUsername" class="login-button">现在登录,聊一聊</el-button>
-                </div>
-            </div>
-            <div id="chatbox" class="chat-wrap" v-show="cboxshow">
-                <el-alert
-                  title="欢迎 "
-                  :closable=false
-                  type="success"> <strong> <span style="color:gray;font-size:16px;">{{ chatname}}</span>  来到聊一聊 当前在线人数: <span style="color:darkgreen;font-size:16px;">{{curChater}}</span></strong> 
-                </el-alert>
-                <el-card id="ctcontent"  class="chat-content">
-                   <ul>
-                     <li v-for="item in chatList">
-                       <strong>
-                         <p :class="item.look"> <span id="otherpo">{{item.username}}</span> <el-tag type="success" id="curmsg">  {{item.msg}}  </el-tag>  <span id="selfpo">   {{item.username}}  </span> </p>
-                       </strong>
-                     </li>
-                   </ul>
-                </el-card>
-               <el-card>
-                    <el-input v-model="chatcon" @keydown.native="chatmit($event)" rows="3" cols="50" id="chatmessage" class="message-ipt" type="textarea" placeholder="请输入要发送的内容 Enter发送"></el-input>
-               </el-card>
-            </div>
-        <!-- 聊天室部分 -->
           </section>
       
         </el-col>
@@ -247,12 +216,47 @@
               </ul>
             </div>
             <!-- 标签区域 -->
-           <a href='https://clustrmaps.com/site/19utb'  title='Visit tracker'><img src='//clustrmaps.com/map_v2.png?cl=ffffff&w=300&t=tt&d=jg9wjKM1AM5wfpjis6A7Ac_oqXLqNzbv0WvjcuaqGjc&co=2d78ad&ct=ffffff'/></a>
+            <!-- 聊天室部分 -->
+            <div id="loginbox" class="login-wrap" v-show="clogshow">
+                <h2 class="title">聊一聊 ?</h2><br>
+                <div class="login-wrap">
+                    <div class="user-ipt">
+                        <h3  class="user-name">呢称：</h3><br>
+                        <el-input id="chatname" v-model="chatname"  class="name-ipt" type="text" />
+                    </div><br>
+                    <el-button type="info" round id="loginbutton" @click="setUsername" class="login-button">现在登录,聊一聊</el-button>
+                </div>
+            </div>
+            <div id="chatbox" class="chat-wrap" v-show="cboxshow">
+                <el-alert
+                  title="欢迎 "
+                  :closable=false
+                  type="success"> <strong> <span style="color:gray;font-size:16px;">{{ chatname}}</span>  来到聊一聊 当前在线人数: <span style="color:darkgreen;font-size:16px;">{{curChater}}</span></strong> 
+                </el-alert>
+                <el-card id="ctcontent"  class="chat-content">
+                   <ul>
+                     <li v-for="item in chatList">
+                       <strong>
+                         <p :class="item.look"> <span id="otherpo">{{item.username}}</span> <el-tag type="success" id="curmsg">  {{item.msg}}  </el-tag>  <span id="selfpo">   {{item.username}}  </span> </p>
+                       </strong>
+                     </li>
+                   </ul>
+                </el-card>
+               <el-card>
+                    <el-input v-model="chatcon" @keydown.native="chatmit($event)" :rows=3 :cols=50 id="chatmessage" class="message-ipt" type="textarea" placeholder="请输入要发送的内容 Enter发送"></el-input>
+               </el-card>
+            </div>
+        <!-- 聊天室部分 -->
+           <!-- <a href='https://clustrmaps.com/site/19utb'  title='Visit tracker'><img src='//clustrmaps.com/map_v2.png?cl=ffffff&w=300&t=tt&d=jg9wjKM1AM5wfpjis6A7Ac_oqXLqNzbv0WvjcuaqGjc&co=2d78ad&ct=ffffff'/></a> -->
             <!-- <a data-type="16" data-tmpl="300x360" data-tmplid="218" biz-loc_name="上海" biz-from_city="" biz-begin_date="" biz-end_date="" data-rd="2" data-style="2" data-border="1" href="#"></a>-->
           </aside>
         </el-col>
 
       </section>
+    </el-row >
+    <!-- 首页次类信息部分开始 -->
+    <el-row type="flex" class="row-bg" justify="space-around" :gutter="220" >
+      <secinfo></secinfo>
     </el-row>
 
   </div>
@@ -260,6 +264,8 @@
 <script>
 import { goodTime } from "../config/method"; //引入时间过滤函数等方法
 import clipLoader from "vue-spinner/src/RiseLoader.vue";
+import secinfo from "./component/secinfo.vue";
+
 let PassRes = true; // 限制访问预留变量，如果有的话
 export default {
   data() {
@@ -274,15 +280,16 @@ export default {
       cate: "",
       scrollView: "", // 当前分类，由对应分类标签页（el-menu-item）的子元素i的classList[1]获得
       curpg: 1,
-      pgIsLittle: false,
+      pgIsLittle: true,
       loading: false,
       color: "#3AB982",
-      chatname: "",
+      chatname: "", // 聊天室 用户名
       cboxshow: false,
       clogshow: true,
-      chatcon: "",
-      chatList: [],
-      curChater: ''
+      chatcon: "", // 聊天输入内容
+      chatList: [], // 正式聊天框内容
+      curChater: "" , // 自己与对方对话框样式切换
+      // we_data: [] // Node爬虫数据
     };
   },
   props: {
@@ -292,9 +299,11 @@ export default {
     }
   },
   components: {
-    "clip-loader": clipLoader
+    "clip-loader": clipLoader,
+    "secinfo": secinfo
   },
   created() {
+    //  console.log('qBASE URL '+v.$QILAND)
     localStorage.removeItem("utitle"),
       this.get_data(),
       this.getTag(),
@@ -349,19 +358,19 @@ export default {
     },
     loginResult: function(data) {
       if (data.code === 0) {
-        console.log('当前在线人数'+data.curChater);
+        console.log("当前在线人数" + data.curChater);
         this.curChater = data.curChater;
         let welData = {
           username: this.chatname,
-          message: '欢迎欢迎[此条消息由系统自动发送233]'
+          message: "欢迎~[此条系统自动发送233]"
         };
         this.showMessage(welData);
         this.showChatRoom();
         console.log("初次登录多多关照");
       } else if (data.code === 1) {
-      this.$notify({
+        this.$notify({
           title: "功能提示",
-          message:  this.chatname + " 你已登录过,后续功能开发完成前,你需要换个马甲" ,
+          message: this.chatname + " 你已登录过,后续功能开发完成前,你需要换个马甲",
           position: "top-right"
         });
       } else {
@@ -373,12 +382,12 @@ export default {
       console.log("123");
     },
     userDiscon: function(data) {
-     this.curChater = data.curChater;
-     this.$notify({
-          title: "最新动态",
-          message:  data.msg ,
-          position: "bottom-right"
-        });
+      this.curChater = data.curChater;
+      this.$notify({
+        title: "最新动态",
+        message: data.msg,
+        position: "bottom-right"
+      });
     }
   },
 
@@ -400,9 +409,9 @@ export default {
       // 使用全局绑定的$api方法来获取数据
       // console.log(this.$route.params.tag)
       v.$api.get(
-        "get",
+        v.$api.QILAND,"get",
         {
-          list: this.$route.params.itag ? this.$route.params.itag : "hot",
+          list: this.$route.params.itag ? this.$route.params.itag : "select",
           p: this.curpg
         },
         function(r) {
@@ -419,7 +428,7 @@ export default {
               testAr.push({
                 title: " ...",
                 tag: " ...",
-                update_time: '160030078'
+                update_time: "160030078"
               });
             }
             v.lists = r.data.data.length != 0 ? r.data.data : testAr;
@@ -434,7 +443,7 @@ export default {
       var v = this;
       if (!params) params = {};
 
-      v.$api.get("category", { tag: "all" }, function(r) {
+      v.$api.get(v.$api.QILAND,"category", { tag: "all" }, function(r) {
         v.tags = r.data.data; //追加数据（覆盖加载）
       });
     },
@@ -542,7 +551,37 @@ export default {
 
         // $("#content").append(`<p class='other-message'><span class='name'>${data.username}: </span><span class='msg'>${data.message}</span></p>`);
       }
+    },
+
+    get_weland: function (params) {
+      this.loading = true;
+      var v = this;
+      if (!params) params = {};
+      v.$api.get(
+        v.$api.WELAND,"article",
+        {},
+        function(r) {
+          // console.log(r.data);
+            // v.we_data = r.data ;
+            // v.lists = r.data.length != 0 ? r.data : '';
+            let jsonData = r.data
+           // 遍历json对象 生成新数组
+            jsonData.forEach((item, index) => {
+            v.lists[index] = {
+              _id: item.id,
+              gzh_name: item.url.substr(0,18),
+              tag: 'Outside',
+              title: item.title    }
+      }); 
+
+            //  r.data.data.sort((a, b) => b._id - a._id);  // 可按json里的_id属性排序(升序)/追加数据（覆盖加载）备用无限加载: v.lists.concat(r.data.sites)
+            // console.log(v.$route);
+            v.loading = false;
+          
+        }
+      );
     }
+
   }
 };
 </script>

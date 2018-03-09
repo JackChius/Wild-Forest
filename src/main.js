@@ -21,8 +21,11 @@ import routes from './config/routes'
 
 // 引用API文件
 import api from './config/api'
+
 // 将API方法绑定到全局!!!!
 Vue.prototype.$api = api
+// Vue.prototype.$QILAND = QILAND
+// Vue.prototype.$WELAND = WELAND
 // 使用配置文件规则
 
 const router = new VueRouter({

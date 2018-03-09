@@ -1,9 +1,10 @@
 // 配置API接口地址
-var root = 'https://free2me.top:8008/api'
+const QILAND = 'https://free2me.top:8008/api'
+const WELAND = 'http://free2me.top:3000/api'
 // 引用axios
 var axios = require('axios')
 
-let v = this
+// let v = this
 // 自定义判断元素类型JS
 function toType (obj) {
   return ({}).toString.call(obj).match(/\s([a-zA-Z]+)/)[1].toLowerCase()
@@ -34,7 +35,7 @@ function filterNull (o) {
   另外，不同的项目的处理方法也是不一致的，这里出错是简单的alert
 */
 
-function apiAxios (method, url, params, success, failure) {
+function apiAxios (method, base, url, params, success, failure) {
   if (params) {
     params = filterNull(params)
   }
@@ -43,12 +44,12 @@ function apiAxios (method, url, params, success, failure) {
     url: url,
     data: method === 'POST' || method === 'PUT' ? params : null,
     params: method === 'GET' || method === 'DELETE' ? params : null,
-    baseURL: root,
+    baseURL: base,
     withCredentials: false
   })
   .then(function (res) {
     if (res) {
-      success(res) 
+      success(res)
     } else {
       if (failure) {
         failure(res)
@@ -60,16 +61,6 @@ function apiAxios (method, url, params, success, failure) {
   .catch(function (err) {
     let res = err
     if (err) {
-      // document.write('数据获取异常, HTTP CODE:\n' + res)
-      // this.$alert('服务器数据获取异常', '提示', {
-      //   confirmButtonText: '确定',
-      //   callback: action => {
-      //     this.$message({
-      //       type: 'info',
-      //       message: `action: ${ action }`
-      //     })
-      //   }
-      // })
       console.log('数据获取异常, HTTP CODE:\n' + res)
       return
     }
@@ -78,16 +69,18 @@ function apiAxios (method, url, params, success, failure) {
 
 // 返回在vue模板中的调用接口
 export default {
-  get: function (url, params, success, failure) {
-    return apiAxios('GET', url, params, success, failure)
+  get: function (base, url, params, success, failure) {
+    return apiAxios('GET', base, url, params, success, failure)
   },
-  post: function (url, params, success, failure) {
-    return apiAxios('POST', url, params, success, failure)
+  post: function (base, url, params, success, failure) {
+    return apiAxios('POST', base, url, params, success, failure)
   },
-  put: function (url, params, success, failure) {
-    return apiAxios('PUT', url, params, success, failure)
+  put: function (base, url, params, success, failure) {
+    return apiAxios('PUT', base, url, params, success, failure)
   },
-  delete: function (url, params, success, failure) {
-    return apiAxios('DELETE', url, params, success, failure)
-  }
+  delete: function (base, url, params, success, failure) {
+    return apiAxios('DELETE', base, url, params, success, failure)
+  },
+  WELAND,
+  QILAND
 }

@@ -190,11 +190,14 @@
             <div class="aside-tab">
            
                 <h3>节点导航</h3>
-              <ul id="tagList">
+               <ul id="tagList">
                 <li class="tagTitle" v-for="(tag,index) in tags" v-if="index < 28">
-                  <el-tag size="middle" type="success">
-                    <router-link :to="{ name: 'category', query: { tag: tag.tag,p: 1 } }"> <strong> {{tag.tag}} </strong></router-link>
+                  <el-tag >
+                    <router-link :to="{ name: 'category', query: {tag: tag.tag}}">
+                     <strong>{{tag[1]}}</strong>  </router-link>
+                    <div class="border"></div>
                   </el-tag>
+
                 </li>
               </ul>
             </div>
@@ -210,8 +213,8 @@
 </template>
 
 <script>
-import { goodTime } from '../config/method'  //引入时间过滤函数等方法
-import riseLoader from 'vue-spinner/src/MoonLoader.vue'  //加载中动画组件
+import { goodTime } from "../config/method"; //引入时间过滤函数等方法
+import riseLoader from "vue-spinner/src/MoonLoader.vue"; //加载中动画组件
 export default {
   data() {
     return {
@@ -220,97 +223,120 @@ export default {
       tags: [],
       searchBarFixed: false,
       hshow: true,
-      coninfo:'',
+      coninfo: "",
       loading: false
-    }
+    };
   },
   components: {
-    'ring-loader':riseLoader
+    "ring-loader": riseLoader
   },
-  beforeRouteLeave(to,from,next){
-    if(to.name=='accountInfo'||'category'){
-      let utitle = this.$route.params.utitle
-      localStorage.setItem('utitle',utitle)
-    }else{
-      localStorage.removeItem('utitle')
+  beforeRouteLeave(to, from, next) {
+    if (to.name == "accountInfo" || "category") {
+      let utitle = this.$route.params.utitle;
+      localStorage.setItem("utitle", utitle);
+    } else {
+      localStorage.removeItem("utitle");
     }
-    next()
+    next();
   },
-  created() {  
-    this.get_data(),
-    this.getTag()
+  created() {
+    this.get_data(), this.getTag();
   },
   mounted() {
-    window.addEventListener('scroll', this.handleScroll),
-      window.addEventListener('mousewheel', this.handleScroll)
+    window.addEventListener("scroll", this.handleScroll),
+      window.addEventListener("mousewheel", this.handleScroll);
   },
   destroyed() {
-    window.removeEventListener('scroll', this.handleScroll),
-    window.removeEventListener('mousewheel', this.handleScroll)
+    window.removeEventListener("scroll", this.handleScroll),
+      window.removeEventListener("mousewheel", this.handleScroll);
   },
   filters: {
     goodTime(val) {
-      return goodTime(val*1000);                  // 当后端时间戳位数不一致(10)，需要转换为13位js时间戳
+      return goodTime(val * 1000); // 当后端时间戳位数不一致(10)，需要转换为13位js时间戳
     }
   },
   methods: {
     get_data: function(params) {
-     
-      
-      let v = this
-      setTimeout(function(){  v.loading = true },800)
-      setTimeout(function(){  v.loading = false },800)
-      if (!params) params = {}
-      // 使用全局绑定的$api方法来获取数据
-      v.$api.get('stm', { tag: this.$route.params.tag, id: this.$route.params.id }, function(r) {
-        if(r.data.status===0){      
-         v.$router.replace({ path: '/404' })
-        }else{
-           v.words = r.data.data[0]
-           let utitle = localStorage.getItem('utitle')
-            console.log('utitle: '+utitle)
-            if (utitle===null){
-              v.coninfo = v.words.title ? v.words.title : v.$route.params.utitl
-              v.loading = true
-            }else{
-              v.coninfo = utitle ? utitle : v.words.title
-              v.loading = true
+      let v = this;
+      setTimeout(function() {
+        v.loading = true;
+      }, 800);
+      setTimeout(function() {
+        v.loading = false;
+      }, 800);
+      if (!params) params = {};
+      let curTag = this.$route.params.tag;
+      let curID = this.$route.params.id;
+      if (curTag === "Outside") {
+        v.$api.get(
+          v.$api.WELAND,
+          "article/"+curID ,{} , 
+          function(r) {
+             console.log(r.data);
+             v.coninfo = r.data.title ;
+             v.words = r.data;
           }
-        }
-       
-      })
+        );
+      } else {
+        v.$api.get(
+          v.$api.QILAND,
+          "stm",
+          { tag: this.$route.params.tag, id: this.$route.params.id },
+          function(r) {
+            if (r.data.status === 0) {
+              v.$router.replace({ path: "/404" });
+            } else {
+              v.words = r.data.data[0];
+              let utitle = localStorage.getItem("utitle");
+              console.log("utitle: " + utitle);
+              if (utitle === null) {
+                v.coninfo = v.words.title
+                  ? v.words.title
+                  : v.$route.params.utitl;
+                v.loading = true;
+              } else {
+                v.coninfo = utitle ? utitle : v.words.title;
+                v.loading = true;
+              }
+            }
+          }
+        );
+      }
     },
-    getTag: function(params) {  
-      console.log(this.$route)                             // 获取文章分类
-      var v = this
-      if (!params) params = {}
-      v.$api.get('category', {tag:'all'}, function(r) {
-        v.tags = r.data.data   //追加数据（覆盖加载）
-      })
+    getTag: function(params) {
+      console.log(this.$route); // 获取文章分类
+      var v = this;
+      if (!params) params = {};
+      v.$api.get(v.$api.QILAND, "category", { tag: "all" }, function(r) {
+        v.tags = r.data.data; //追加数据（覆盖加载）
+      });
     },
     handleScroll: function(e) {
-      var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
-      var offsetTop = document.querySelector('#header').offsetTop
-      if (e.deltaY < 0) {                    //鼠标向上滑动
+      var scrollTop =
+        window.pageYOffset ||
+        document.documentElement.scrollTop ||
+        document.body.scrollTop;
+      var offsetTop = document.querySelector("#header").offsetTop;
+      if (e.deltaY < 0) {
+        //鼠标向上滑动
 
-        if (scrollTop - offsetTop > 100) {       // 滚动距离超过元素自身距顶部距离时触发，大于100避免覆盖下层元素
-          this.searchBarFixed = true              // 影响css类的属性
-          this.hshow = true                       // 关联transition动画
-        } else {                                 // 回到顶部时取消吸顶 (取消相关样式)
-          this.searchBarFixed = false
-          this.hshow = true
+        if (scrollTop - offsetTop > 100) {
+          // 滚动距离超过元素自身距顶部距离时触发，大于100避免覆盖下层元素
+          this.searchBarFixed = true; // 影响css类的属性
+          this.hshow = true; // 关联transition动画
+        } else {
+          // 回到顶部时取消吸顶 (取消相关样式)
+          this.searchBarFixed = false;
+          this.hshow = true;
         }
+      } else if (e.deltaY > 0) {
+        //向下滚动事件
 
-
-      } else if (e.deltaY > 0) {              //向下滚动事件
-
-        this.searchBarFixed = false
-        this.hshow = false
-
+        this.searchBarFixed = false;
+        this.hshow = false;
       }
     }
-
   }
-}
+};
 </script>
 

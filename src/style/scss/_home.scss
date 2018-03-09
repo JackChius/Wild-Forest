@@ -111,11 +111,11 @@ html {
 	  clear: both;
     }
    ul.left_tabs{
-	float: left;
+	   text-align: center;
 	li.tab {		
 		margin:5px 0;
 		padding:10px 0;	
-		width:100%;	
+		// width:100%;	
 		a {
 		  font-size:14px;
 		 
@@ -136,7 +136,7 @@ html {
    }
    	h1{
 		color: white;	
-		clear: both;                                             //清除浮动？
+	                                       //清除浮动？
 	   }
 	+div{
 		margin-top: 5px;

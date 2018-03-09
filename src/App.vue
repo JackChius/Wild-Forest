@@ -56,7 +56,9 @@
         <!-- 加载动画结束 -->
       <!-- </div>  -->
     </center>
-    <div v-on:click="goTop" v-show="ok" class="go_top"></div> <br><br><br><br>
+     <transition name="slide">
+    <div v-on:click="goTop" v-show="ok" class="go_top"></div> 
+     </transition>    <br><br><br><br>
     <footer class="copy">
     © 2018 Artistic index Page. All Rights Reserved | Design by QiquLand
     </footer>

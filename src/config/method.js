@@ -1,6 +1,6 @@
 export function goodTime (input) {
-  var now = new Date().getTime()
-  var oldTime = input
+  let now = new Date().getTime()
+  let oldTime = input
 
   // var y = oldTime.getFullYear();
   // var m = oldTime.getMonth() + 1;
