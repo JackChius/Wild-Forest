@@ -13,18 +13,22 @@
     
                                 </el-breadcrumb>
                             </span>
-                            <el-button style="float: right;" type="success">change</el-button>
+                            <el-button style="float: right;" type="success">Change</el-button>
                         </div>
                         <div class="text item">
-                            <i class="user_ico">
-                                <!-- <img style="width:40px;" :src="words.logo" v-bind:alt="words.gzh_name"> -->
-                            </i>
-                              <h1> {{words.gzh_name}}  <span style="font-size:18px;">关注:{{ words.c_text }} </span>  </h1>                            
-                              
-                             <br><br>
-                            <span class="icon-tab">注册时间: {{words.id}} <br> </span> <br>
+                          <el-row :gutter="90">
+                            <el-col :xs="12" :md="5" :lg="5" > 
+                                <img  :src=words.logo class="image">
+                            </el-col>
+                                <el-col :xs="12" :md="18" :lg="19"> 
+                                    <h1 > {{words.gzh_name}}  <span style="font-size:15px;"> 微信号 : {{ words.wechat_id }} </span>  </h1>  
+                                <br>
+                                <h3 style="color:grey; line-height:22px;">{{ words.introduce}} </h3> <br>
+                                <span style="color:grey; line-height:19px;" class="icon-tab">注册时间: {{words.id}} </span> <br>
+                                 </el-col > 
+                          </el-row>
                             <el-collapse v-model="activeNames2">
-                                <el-collapse-item title="账号历史热文" name="1">
+                                <el-collapse-item title="账号历史热文  轻触/点击展开" name="1">
                                     <ul v-for="coll in colls">
                                         <li style="list-style-type:none">
                                             <router-link :to="{ name: 'content', params: { id: coll.id,tag: coll.tag } }">
@@ -81,7 +85,7 @@
             </el-col>
             <el-col :xs= "{span: 22, offset: 1}" :sm="20" :md="18" :lg="5">
                 <el-card :body-style="{ padding: '0px' }">
-                    <img style="width:100%;height:200px" :src="words.article[0].logo" class="image">
+                   <img style="width:90%;dispaly:inline-block;" :src=words.qr_code class="image">
                     <div style="padding: 14px;">
                         <strong><h3>{{ words.gzh_name }}</h3></strong>
                         <div class="bottom clearfix">
@@ -92,9 +96,9 @@
                 </el-card><br>
                 <div class="grid-content bg-purple">
                     <el-collapse v-model="activeNames">
-                        <el-collapse-item title="相关帐号 Consistency" name="1">
+                        <el-collapse-item title="功能介绍 Consistency" name="1">
                             <div>{{words.introduce}}</div>
-                            <div>所有的元素和结构在车中一致<br></div>
+                            <div><br></div>
                         </el-collapse-item>
                         <el-collapse-item title="订阅更多 Feedback" name="2">
                             <div>{{words.introduce}}</div>
@@ -118,7 +122,7 @@ export default {
             lists: [],
             lists2: [],
             words: [],
-            activeNames2: ['1'],
+            // activeNames2: ['1'],
             colls: []
         };
     },
@@ -134,7 +138,7 @@ export default {
 
             var v = this
             if (!params) params = {}
-            v.$api.get('account', {id:this.$route.query.id} , function (r) {
+            v.$api.get(v.$api.QILAND,'account', {id:this.$route.query.id} , function (r) {
                 if(r.data.status===0){
          
                 v.$router.replace({ path: '/404' })

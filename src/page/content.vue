@@ -224,7 +224,8 @@ export default {
       searchBarFixed: false,
       hshow: true,
       coninfo: "",
-      loading: false
+      loading: false,
+      author: '888999'
     };
   },
   components: {

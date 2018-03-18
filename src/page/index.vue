@@ -93,7 +93,7 @@
         <!--侧边栏部分。IDE中通常折叠-->
         <el-col :md="4" :lg="3">
           <aside class="aside-bar">
-            <h3>专属个性阅读社区</h3>
+            <h3>我的专属个性阅读社区</h3>
             <ul>
               <li>
                 <p> &nbsp;&nbsp; </p>&nbsp; Website Powered by
@@ -102,7 +102,6 @@
               </li>
               <br>
               <li>
-               
                 <strong>&nbsp; 1234567890</strong>
                 <i class="el-icon-share"></i>
               </li>
@@ -110,56 +109,17 @@
             </ul>
             <!--侧边栏信息区 编辑器通常折叠-->
             <div class="aside-tab">
-              <h3>最新收录</h3>
+              <h3>最新收录 <span class="ckey"> {{recommend_data.length}} </span> </h3>
               <ul class="aside-list">
-                <li class="aside-list-item">
+                <li v-for="(item,index) in recommend_data" v-if="index < 10" class="aside-list-item">
                   <strong>
                     <span class="pic-item">
                       <a href="http://free2me.top:3001">
-                        <img class="aside-img" src="../../static/1.jpg" width="25" height="25" alt="test">
+                        <img class="aside-img" :src=item.logo width="25" height="25" alt="test">
                       </a>
                     </span>
-                   <router-link  :to="{ name: 'accountInfo', params: { id: 'bwchinesewx' }}">BWC中文网</router-link>
-                  </strong>
-                </li>
-                <li class="aside-list-item">
-                  <strong>
-                    <span class="pic-item">
-                      <a href="http://free2me.top:3001">
-                        <img class="aside-img" src="../../static/2.jpg" width="25" height="25" alt="test">
-                      </a>
-                    </span>
-                  <router-link  :to="{ name: 'accountInfo', params: { id: 'nbdnews' }}">每日经济新闻</router-link>
-                  </strong>
-                </li>
-                <li class="aside-list-item">
-                  <strong>
-                    <span class="pic-item">
-                      <a href="http://free2me.top:3001/">
-                        <img class="aside-img" src="../../static/c3.jpg" width="25" height="25" alt="test">
-                      </a>
-                    </span>
-                   <router-link  :to="{ name: 'accountInfo', params: { id: 'cdzvision' }}">充电桩视界</router-link>
-                  </strong>
-                </li>
-                <li class="aside-list-item">
-                  <strong>
-                    <span class="pic-item">
-                      <a href="#">
-                        <img class="aside-img" src="../../static/4.jpg" width="25" height="25" alt="test">
-                      </a>
-                    </span>
-                   <router-link  :to="{ name: 'accountInfo', params: { id: 'kongjiansheji88' }}">空间设计</router-link>
-                  </strong>
-                </li>
-                <li class="aside-list-item">
-                  <strong>
-                    <span class="pic-item">
-                      <a href="#">
-                        <img class="aside-img" src="../../static/5.jpg" width="25" height="25" alt="test">
-                      </a>
-                    </span>
-                   <router-link  :to="{ name: 'accountInfo', params: { id: 'czxxdck' }}">中医护理</router-link>
+                   <router-link  :to="{ name: 'accountInfo', query: { id: item.wechat_id }}">
+                     {{item.gzh_name}}</router-link>
                   </strong>
                 </li>
               </ul>
@@ -289,7 +249,7 @@ export default {
       chatcon: "", // 聊天输入内容
       chatList: [], // 正式聊天框内容
       curChater: "" , // 自己与对方对话框样式切换
-      // we_data: [] // Node爬虫数据
+      recommend_data: [] // 最新收录数据
     };
   },
   props: {
@@ -307,6 +267,7 @@ export default {
     localStorage.removeItem("utitle"),
       this.get_data(),
       this.getTag(),
+      this.get_recommend(),
       this.checkMobile();
     // this.emitEvent()
     // window.addEventListener('scroll', this.showTop)
@@ -552,7 +513,6 @@ export default {
         // $("#content").append(`<p class='other-message'><span class='name'>${data.username}: </span><span class='msg'>${data.message}</span></p>`);
       }
     },
-
     get_weland: function (params) {
       this.loading = true;
       var v = this;
@@ -561,9 +521,6 @@ export default {
         v.$api.WELAND,"article",
         {},
         function(r) {
-          // console.log(r.data);
-            // v.we_data = r.data ;
-            // v.lists = r.data.length != 0 ? r.data : '';
             let jsonData = r.data
            // 遍历json对象 生成新数组
             jsonData.forEach((item, index) => {
@@ -574,12 +531,19 @@ export default {
               title: item.title    }
       }); 
 
-            //  r.data.data.sort((a, b) => b._id - a._id);  // 可按json里的_id属性排序(升序)/追加数据（覆盖加载）备用无限加载: v.lists.concat(r.data.sites)
-            // console.log(v.$route);
+         
             v.loading = false;
           
         }
       );
+    },
+    get_recommend: function () {
+      var that = this;
+      // if (!params) params = {};
+      that.$api.get(that.$api.QILAND,"recommend", {}, function(r) {
+        that.recommend_data = r.data.data; //追加数据（覆盖加载）
+        console.log(that.recommend_data)
+      });
     }
 
   }
