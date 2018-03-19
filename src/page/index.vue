@@ -49,7 +49,7 @@
               <li v-for="(item,index) in lists">
                 <!-- <h1>{{we_data?we_data[1].title:''}}</h1> -->
                 <i class="user_ico">              
-                  <img v-bind:src="item.logo">              
+                    <img :src="item.logo!=null ? item.logo: '../../static/' + Math.floor(Math.random()*10) + '.jpg'" alt="pic">           
                 </i>
                 <h3>
                    <router-link  :to="{ name: 'content',params: { 
@@ -114,8 +114,7 @@
                 <li v-for="(item,index) in recommend_data" v-if="index < 10" class="aside-list-item">
                   <strong>
                     <span class="pic-item">
-                      <a href="http://free2me.top:3001">
-                        <img class="aside-img" :src=item.logo width="25" height="25" alt="test">
+                        <img :src="item.logo!= null ?item.logo: '../../static/' + Math.floor(Math.random()*10) + '.jpg'" width="25" height="25" alt="pic">                  
                       </a>
                     </span>
                    <router-link  :to="{ name: 'accountInfo', query: { id: item.wechat_id }}">
