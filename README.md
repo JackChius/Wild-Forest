@@ -1,6 +1,13 @@
-# vuepro
+# Vuepro
 
-> A Vue.js project
+> 一个专注优质分享的垂直领域公众号聚合平台
+### 主要技术栈
+* Vue2.3+VueRouter
+* 异步数据(服务端通讯): Axios
+* UI: ElementUI+SCSS
+* 数据/状态存储: LocalStorge+Vuex
+* 聊天室模块: Sockect.io
+* 视频模块：FlexBox+阿里云OSS对象存储
 
 ## Build Setup
 
