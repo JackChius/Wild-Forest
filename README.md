@@ -9,7 +9,7 @@
 * 聊天室模块: Sockect.io
 * 视频模块：FlexBox+阿里云OSS对象存储
 
-## Build Setup
+## 部署步骤
 
 ``` bash
 # install dependencies
@@ -34,4 +34,5 @@ npm run e2e
 npm test
 ```
 
-For detailed explanation on how things work, checkout the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+过程中遇到的一些部署细节可查阅Vue-loader/Vue-cli相关文档
+[guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
