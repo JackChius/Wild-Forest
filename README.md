@@ -9,7 +9,7 @@
 * 聊天室模块: Sockect.io
 * 视频模块：FlexBox+阿里云OSS对象存储
 
-## 部署步骤
+## 如何运行
 
 ``` bash
 # install dependencies
