@@ -12,26 +12,20 @@
 ## 如何运行
 
 ``` bash
-# install dependencies
+# 安装依赖
 npm install
 
-# serve with hot reload at localhost:8080
+# 本地启动与7000端口 localhost:7000
 npm run dev
 
-# build for production with minification
+# 构建静态资源
 npm run build
 
-# build for production and view the bundle analyzer report
+# 如果需要带分析日志的启动可以这样
 npm run build --report
 
-# run unit tests
+# 单元测试(待完善)
 npm run unit
-
-# run e2e tests
-npm run e2e
-
-# run all tests
-npm test
 ```
 
 过程中遇到的一些部署细节可查阅Vue-loader/Vue-cli相关文档
