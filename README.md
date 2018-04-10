@@ -15,7 +15,7 @@
 # 安装依赖
 npm install
 
-# 本地启动与7000端口 localhost:7000
+# 本地启动于7000端口 localhost:7000
 npm run dev
 
 # 构建静态资源
